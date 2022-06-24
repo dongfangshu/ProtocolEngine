@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<protocol>
+	<CSProtocolPath>C:\Project\ProtocolEngine\ProtocolTest\Protocol</CSProtocolPath>
+	<OutPutPath>C:\Project\ProtocolEngine\ProtocolTest\Generate</OutPutPath>
+	<ExtraReference></ExtraReference>
+	<Reference>C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\6.0.5\ref\net6.0</Reference>
+	<Template>C:\Project\ProtocolEngine\ProtocolEngine\Config\TemplateComplete.scriban</Template>
+</protocol>

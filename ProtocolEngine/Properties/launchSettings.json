@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ProtocolEngine": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Project\\GameProject\\Protocol",
+      "remoteDebugEnabled": false
+    }
+  }
+}

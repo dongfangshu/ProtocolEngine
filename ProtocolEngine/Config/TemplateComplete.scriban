@@ -1,0 +1,58 @@
+﻿{{for nameSpace in UseNameSpace}}
+using {{nameSpace}};
+{{end}}
+/*
+ * Automatic generation Do not modify
+ * */
+namespace Proto.{{ NameSpace }}
+{
+//enumDefinition
+{{for enumTypeDefinition in EunmTypes}}
+public enum {{enumTypeDefinition.Name}}
+{
+    {{for enumName in enumTypeDefinition.SunItem}}
+    {{enumName}},
+    {{end}}
+}
+{{end}}
+
+
+
+{{for typeInfo in TypeInfo}}
+    public class {{typeInfo.ClssName}}{{typeInfo.BaseClass}}
+    {
+    //fieldDefinition
+    {{for field in typeInfo.Field_Property_Info}}
+    public {{field.TypeName}} {{field.Name}};
+    {{end}}
+
+    //ctor
+    public  {{typeInfo.ClssName}}()
+    {
+    {{for ctorType in typeInfo.Field_Property_Info}}
+    {{ctorType.CtorCode}}
+    {{end}}
+    }
+
+    //Read
+    public override void Read(byte[] data, ref int offset)
+    {
+        {{if typeInfo.IsSubClass}}
+        base.Read(data,ref offset);
+        {{end}}
+
+        {{for field in typeInfo.Field_Property_Info}}
+        {{field.ReadCode}}
+        {{end}}
+    }
+
+    //Write
+    public override void Write(byte[] data, ref int offset)
+    {
+        {{for field in typeInfo.Field_Property_Info}}
+        {{field.WriteCode}}
+        {{end}}
+    }
+    }
+{{end}}
+}
