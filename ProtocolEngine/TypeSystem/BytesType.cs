@@ -19,8 +19,10 @@ namespace ProtocolEngine
 
         public override string ReadCode(int layer) => $"{Name}= ByteBuffer.ReadBytes(data,ref offset);";
 
-        public override string WriteCode() => $"ByteBuffer.WriteBytes({Name},data,ref offset);";
+        public override string WriteCode(int layer) => $"ByteBuffer.WriteBytes({Name},data,ref offset);";
         public override string CtorCode => $"{Name} = new byte[0];";
+
+        public override bool IsValueType => false;
 
         //public override string ComplateReadCode => $"{TypeName} {Name} = ByteBuffer.ReadBytes(data,ref offset);";
     }

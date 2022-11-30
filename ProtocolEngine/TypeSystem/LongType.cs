@@ -16,8 +16,10 @@ namespace ProtocolEngine
 
         public override string TypeName => "long";
 
+        public override bool IsValueType => true;
+
         public override string ReadCode(int layer) => $"{Name} = ByteBuffer.ReadLong(data,ref offset);";
 
-        public override string WriteCode() => $"ByteBuffer.WriteLong({Name},data,ref offset);";
+        public override string WriteCode(int layer) => $"ByteBuffer.WriteLong({Name},data,ref offset);";
     }
 }

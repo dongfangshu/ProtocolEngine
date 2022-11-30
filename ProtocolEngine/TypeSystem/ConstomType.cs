@@ -29,8 +29,10 @@ namespace ProtocolEngine
 //        => @$"{Name} = new {TypeName}();
 //{Name}.Read(data,ref offset);";
 
-        public override string WriteCode() => $"{Name}.Write(data,ref offset);";
+        public override string WriteCode(int layer) => $"{Name}.Write(data,ref offset);";
         public override string CtorCode => $"{Name} = new {TypeName}();";
+
+        public override bool IsValueType => false;
         //public override string ComplateReadCode => @$"{TypeName} {Name} = new {Type.FullName}();
         //{Name}.Read(data,ref offset);";
     }

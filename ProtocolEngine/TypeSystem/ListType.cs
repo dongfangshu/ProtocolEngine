@@ -66,16 +66,16 @@ namespace ProtocolEngine
             return scripts;
         }
 
-        public override string WriteCode()
+        public override string WriteCode(int layer)
         {
-            CodeWriter codeWriter= new CodeWriter();
+            CodeWriter codeWriter= new CodeWriter(layer);
             codeWriter.StartBlock();
             codeWriter.WriteLine($"{Count.TypeName} {Count.Name} = {Name}.Count;");
-            codeWriter.WriteLine(Count.WriteCode());
+            codeWriter.WriteLine(Count.WriteCode(layer));
             codeWriter.WriteLine($"for(int {tempListIndex} =0;{tempListIndex}<{Count.Name};{tempListIndex}++)");
             codeWriter.StartBlock();
             codeWriter.WriteLine($"{GenericityType.TypeName} {GenericityType.Name}={Name}[{tempListIndex}];");
-            codeWriter.WriteLine(GenericityType.WriteCode());
+            codeWriter.WriteLine(GenericityType.WriteCode(layer));
             codeWriter.EndBlock();
             codeWriter.EndBlock();
             return codeWriter.ToString();
@@ -91,5 +91,7 @@ namespace ProtocolEngine
 //}}
 //}}";
         public override string CtorCode => $"{Name} = new List<{GenericityType.TypeName}>();";
+
+        public override bool IsValueType => false;
     }
 }

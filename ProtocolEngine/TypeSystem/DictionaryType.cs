@@ -12,13 +12,15 @@ namespace ProtocolEngine
         BaseType KeyType;
         BaseType ValueType;
         BaseType CountType;
+        private string tempIndexName;
         public DictionaryType(Type origin,string name) : base(name)
         {
             OriginType = origin;
             var gas = OriginType.GetGenericArguments();
-            KeyType = TypeFacoty.GetType(gas[0],"Key");
-            ValueType = TypeFacoty.GetType(gas[1],"Value");
-            CountType = TypeFacoty.GetType(typeof(int),"Count");
+            KeyType = TypeFacoty.GetType(gas[0],$"{name}_key");
+            ValueType = TypeFacoty.GetType(gas[1],$"{name}_value");
+            CountType = TypeFacoty.GetType(typeof(int),$"{name}_count");
+            tempIndexName = name + "_index";
         }
         Type GetGenerType<TKey,TValue>(TKey Key, TValue Value)
         {
@@ -30,15 +32,19 @@ namespace ProtocolEngine
 
         public override string ReadCode(int layer)
         {
-            CodeWriter codeWriter =new CodeWriter(layer);
+            CodeWriter codeWriter = new CodeWriter(layer);
             codeWriter.StartBlock();
 
-            codeWriter.WriteLine($"{CountType.TypeName} {CountType.ReadCode(++layer)}");
+            codeWriter.WriteLine($"{CountType.TypeName} {CountType.ReadCode(layer+1)}");
 
-            codeWriter.WriteLine($"for(int i =0;i<{CountType.Name};i++)");
+            codeWriter.WriteLine($"for(int {tempIndexName} =0;{tempIndexName}<{CountType.Name};{tempIndexName}++)");
             codeWriter.StartBlock();
-            codeWriter.WriteLine($"{KeyType.TypeName} {KeyType.ReadCode(++layer)};");
-            codeWriter.WriteLine($"{ValueType.TypeName} {ValueType.ReadCode(++layer)};");
+            codeWriter.WriteLine($"{KeyType.TypeName} {KeyType.CtorCode}");
+            codeWriter.WriteLine(KeyType.ReadCode(layer+1));
+            //codeWriter.WriteLine($"{KeyType.TypeName} {KeyType.ReadCode(layer + 1)};");
+            //codeWriter.WriteLine($"{ValueType.TypeName} {ValueType.ReadCode(layer + 1)};");
+            codeWriter.WriteLine($"{ValueType.TypeName} {ValueType.CtorCode}");
+            codeWriter.WriteLine(ValueType.ReadCode(layer+1));
             codeWriter.WriteLine($"{Name}.Add({KeyType.Name},{ValueType.Name});");
             codeWriter.EndBlock();
 
@@ -56,19 +62,20 @@ namespace ProtocolEngine
         //}}
         //}}";
 
-        public override string WriteCode()
+        public override string WriteCode(int layer)
         {
-            CodeWriter codeWriter =new CodeWriter();
+            CodeWriter codeWriter =new CodeWriter(layer);
             codeWriter.StartBlock();
             codeWriter.WriteLine($"{CountType.TypeName} {CountType.Name} = {Name}.Count;");
-            codeWriter.WriteLine(CountType.WriteCode());
-            codeWriter.WriteLine($"foreach(var item in {Name})");
+            codeWriter.WriteLine(CountType.WriteCode(layer));
+            codeWriter.WriteLine($"foreach(var {Name}_item in {Name})");
 
             codeWriter.StartBlock();
-            codeWriter.WriteLine($"{KeyType.TypeName} {KeyType.Name} = item.Key;");
-            codeWriter.WriteLine(KeyType.WriteCode());
-            codeWriter.WriteLine($"{ValueType.TypeName} {ValueType.Name} = item.Value;");
-            codeWriter.WriteLine(ValueType.WriteCode());
+
+            codeWriter.WriteLine($"{KeyType.TypeName} {KeyType.Name} = {Name}_item.Key;");
+            codeWriter.WriteLine(KeyType.WriteCode(layer));
+            codeWriter.WriteLine($"{ValueType.TypeName} {ValueType.Name} = {Name}_item.Value;");
+            codeWriter.WriteLine(ValueType.WriteCode(layer));
 
             codeWriter.EndBlock();
 
@@ -88,5 +95,7 @@ namespace ProtocolEngine
 //}}
 //}}";
         public override string CtorCode => $"{Name} = new {TypeName}();";
+
+        public override bool IsValueType => false;
     }
 }

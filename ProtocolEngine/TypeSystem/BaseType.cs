@@ -8,6 +8,7 @@ namespace ProtocolEngine
 {
     internal abstract class BaseType
     {
+        public abstract bool IsValueType { get;}
         protected BaseType(string name)
         {
             Name = name;
@@ -22,7 +23,7 @@ namespace ProtocolEngine
         public abstract string TypeName { get; }
 
         public abstract string ReadCode(int layer);
-        public abstract string WriteCode();
+        public abstract string WriteCode(int layer);
         //public abstract string ComplateReadCode { get; }
     }
 }

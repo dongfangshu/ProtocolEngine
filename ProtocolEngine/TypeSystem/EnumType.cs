@@ -18,8 +18,10 @@ namespace ProtocolEngine
 
         public override string TypeName => Type.FullName;
 
+        public override bool IsValueType => true;
+
         public override string ReadCode(int layer) => $"{Name} = ({Type.FullName})ByteBuffer.ReadInt(data,ref offset);";
 
-        public override string WriteCode() => $"ByteBuffer.WriteInt((int){Name},data,ref offset);";
+        public override string WriteCode(int layer) => $"ByteBuffer.WriteInt((int){Name},data,ref offset);";
     }
 }

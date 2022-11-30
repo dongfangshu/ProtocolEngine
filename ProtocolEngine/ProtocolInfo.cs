@@ -56,9 +56,12 @@ namespace ProtocolEngine
                 {
                     codeWriter.WriteLine($"public enum {enumType.Name}");
                     codeWriter.StartBlock();
-                    foreach (var subItem in enumType.SunItem)
+                    int subEnumLength = enumType.SunItem.Length;
+                    for (int i = 0; i < subEnumLength; i++)
                     {
-                        codeWriter.WriteLine(subItem+",");
+                        string subItem = enumType.SunItem[i];
+                        string itemValue = enumType.EnumValues[i];
+                        codeWriter.WriteLine($"{subItem} = {itemValue},");
                     }
                     codeWriter.EndBlock();
                 }
@@ -96,34 +99,21 @@ namespace ProtocolEngine
                     //read
                     codeWriter.WriteLine("public override void Read(byte[] data, ref int offset)");
                     codeWriter.StartBlock();
+                    codeWriter.WriteLine("try");
+                    codeWriter.WriteLine("{");
                     if (type.IsSubClass)
                     {
                         codeWriter.WriteLine("base.Read(data,ref offset);");
                     }
                     foreach (var fp in type.Field_Property_Info)
                     {
-                        //if (fp is ListType list)
-                        //{
-                        //    //CodeWriter codeWriter = new CodeWriter();
-                        //    codeWriter.StartBlock();
-                        //    codeWriter.WriteLine("int listCount = ByteBuffer.ReadInt(data,ref offset);");
-                        //    codeWriter.WriteLine("for(int i = 0;i<listCount;i++ )");
-                        //    codeWriter.StartBlock();
-                        //    codeWriter.WriteLine($"{list.GenericityType.TypeName} {list.GenericityType.ReadCode()}");
-                        //    codeWriter.WriteLine($"{list.Name}.Add({list.GenericityType.Name});");
-                        //    codeWriter.EndBlock();
-                        //    codeWriter.EndBlock();
-                        //}
-                        //else if (fp is DictionaryType)
-                        //{
-
-                        //}
-                        //else
-                        //{
-                        //    codeWriter.WriteLine(fp.ReadCode());
-                        //}
                         codeWriter.WriteLine(fp.ReadCode(codeWriter.blockCount));
                     }
+                    codeWriter.WriteLine("}");
+                    codeWriter.WriteLine("catch (Exception ex)");
+                    codeWriter.WriteLine("{");
+                    codeWriter.WriteLine("throw new Exception();");
+                    codeWriter.WriteLine("}");
                     codeWriter.EndBlock();//end read
 
                     //write
@@ -131,7 +121,7 @@ namespace ProtocolEngine
                     codeWriter.StartBlock();
                     foreach (var fp in type.Field_Property_Info)
                     {
-                        codeWriter.WriteLine(fp.WriteCode());
+                        codeWriter.WriteLine(fp.WriteCode(codeWriter.blockCount));
                     }
                     codeWriter.EndBlock();//end write
 

@@ -16,8 +16,9 @@ namespace ProtocolEngine
 
         public override string TypeName => "short";
 
+        public override bool IsValueType => true; 
         public override string ReadCode(int layer) => $"{Name} = ByteBuffer.ReadShort(data,ref offset);";
 
-        public override string WriteCode() => $"ByteBuffer.WriteShort({Name},data,ref offset);";
+        public override string WriteCode(int layer) => $"ByteBuffer.WriteShort({Name},data,ref offset);";
     }
 }
