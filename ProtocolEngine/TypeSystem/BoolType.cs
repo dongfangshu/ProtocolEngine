@@ -16,9 +16,9 @@ namespace ProtocolEngine
 
         public override string TypeName => "bool";
 
-        public override string ReadCode => $"{Name} = ByteBuffer.ReadBool(data,ref offset);";
+        public override string ReadCode(int layer) => $"{Name} = ByteBuffer.ReadBool(data,ref offset);";
 
-        public override string WriteCode => $"ByteBuffer.WriteBool({Name},data,ref offset);";
+        public override string WriteCode() => $"ByteBuffer.WriteBool({Name},data,ref offset);";
 
 
         //public override string ComplateReadCode => $"{TypeName} {Name} = ByteBuffer.ReadBool(data,ref offset);";

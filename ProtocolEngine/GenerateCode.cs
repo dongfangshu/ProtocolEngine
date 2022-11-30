@@ -43,15 +43,18 @@ namespace ProtocolEngine
                 string text = File.ReadAllText(script);
                 tree.Add(CSharpSyntaxTree.ParseText(text));
             }
+
             CSharpCompilationOptions defaultCompilationOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary).WithOptimizationLevel(OptimizationLevel.Debug).WithPlatform(Platform.AnyCpu);
             using (MemoryStream dllStream = new MemoryStream())
             {
                 string assemblyName = Path.GetRandomFileName();
                 var csCompliation = CSharpCompilation.Create(assemblyName, tree, Referenced.GetReference(), defaultCompilationOptions);
                 //csCompliation.AddSyntaxTrees(tree.ToArray());
+                Console.WriteLine("Start Complier");
                 var result = csCompliation.Emit(dllStream);
                 if (result.Success)
                 {
+                    Console.WriteLine("Start Complier Success");
                     //List<ProtocolInfo> protocolInfos = new List<ProtocolInfo>();
                     Dictionary<string, ProtocolInfo> ProtocolMap=new Dictionary<string, ProtocolInfo>();
                     Assembly assembly = Assembly.Load(dllStream.ToArray());
@@ -69,7 +72,6 @@ namespace ProtocolEngine
                         {
                             ProtocolInfo protocol = ProtocolMap[nameSpaceKey];
                             protocol.AddType(type);
-
                         }
                         else
                         {

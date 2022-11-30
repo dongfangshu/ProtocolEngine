@@ -21,8 +21,8 @@ namespace ProtocolEngine
 
         public abstract string TypeName { get; }
 
-        public abstract string ReadCode { get; }
-        public abstract string WriteCode { get; }
+        public abstract string ReadCode(int layer);
+        public abstract string WriteCode();
         //public abstract string ComplateReadCode { get; }
     }
 }

@@ -16,8 +16,8 @@ namespace ProtocolEngine
 
         public override string TypeName => "string";
 
-        public override string ReadCode => $"{Name} = ByteBuffer.ReadString(data,ref offset);";
+        public override string ReadCode(int layer) => $"{Name} = ByteBuffer.ReadString(data,ref offset);";
 
-        public override string WriteCode => $"ByteBuffer.WriteString({Name},data,ref offset);";
+        public override string WriteCode() => $"ByteBuffer.WriteString({Name},data,ref offset);";
     }
 }

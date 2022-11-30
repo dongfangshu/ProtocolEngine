@@ -19,11 +19,18 @@ namespace ProtocolEngine
 
         public override string TypeName => Type.Name;
 
-        public override string ReadCode => @$"{Name} = new {TypeName}();
-{Name}.Read(data,ref offset);";
+        public override string ReadCode(int layer)
+        {
+            CodeWriter codeWriter = new CodeWriter(layer);
+            //codeWriter.WriteLine($"{Name} = new {TypeName}();");
+            codeWriter.WriteLine($"{Name}.Read(data,ref offset);");
+            return codeWriter.ToString();
+        }
+//        => @$"{Name} = new {TypeName}();
+//{Name}.Read(data,ref offset);";
 
-        public override string WriteCode => $"{Name}.Write(data,ref offset);";
-        public override string CtorCode => $"{Name} = null;";
+        public override string WriteCode() => $"{Name}.Write(data,ref offset);";
+        public override string CtorCode => $"{Name} = new {TypeName}();";
         //public override string ComplateReadCode => @$"{TypeName} {Name} = new {Type.FullName}();
         //{Name}.Read(data,ref offset);";
     }

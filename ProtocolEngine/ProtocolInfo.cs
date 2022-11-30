@@ -1,23 +1,14 @@
-﻿using Scriban;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Xml.Linq;
 
 namespace ProtocolEngine
 {
+
     internal class ProtocolInfo
     {
         public string NameSpace;
-        //public List<Type> Types=new List<Type>();//此命名空间下的protocol类型
         public List<TypeInfo> TypeInfo=new List<TypeInfo>();
         public List<EnumDefinition> EunmTypes = new List<EnumDefinition>();
         public HashSet<string> UseNameSpace = new HashSet<string>();
-        static Regex EmptyLine = new Regex(@"^(\s *)\r\n");
-        static Regex DuplicateLine = new Regex("^\r\n\r\n");
         public ProtocolInfo(string nameSpace)
         {
             NameSpace =nameSpace;
@@ -43,32 +34,115 @@ namespace ProtocolEngine
                 UseNameSpace.Add(NameSpace);
             }
         }
-        static string NameChange(System.Reflection.MemberInfo memberInfo)
-        {
-            return memberInfo.Name;//.net 编译之后是小写加下划线，转一下字段属性的名字
-        }
         public void Wirte()
         {
-            string templateScripts = File.ReadAllText(Config.Ins.TemplatePath);
-            Template template = Template.Parse(templateScripts);
-            string scripts = template.Render(this, NameChange);
-            if (!Directory.Exists(Config.Ins.OutPathPath))
+            if (!Directory.Exists(Config.OutPathPath))
             {
-                Directory.CreateDirectory(Config.Ins.OutPathPath);
+                Directory.CreateDirectory(Config.OutPathPath);
             }
-            using (var writer = File.CreateText(Config.Ins.OutPathPath+"/"+NameSpace+"_gen.cs"))
+            CodeWriter codeWriter=new CodeWriter();
+            //using
+            foreach (var nameSpace in UseNameSpace)
             {
+                codeWriter.WriteLine($"using {nameSpace};" );
+            }
+            codeWriter.WriteLine($"namespace {NameSpace}");
+            codeWriter.StartBlock();
 
-                //scripts = EmptyLine.Replace(scripts,"");
-                //scripts = DuplicateLine.Replace(scripts,"");
-                //scripts = scripts.Replace("\r\n\r\n","\r\n");
-                //scripts = Regex.Replace(scripts, @"^(\s *)\r\n","");
-                writer.Write(scripts);
-                writer.Flush();
-                writer.Close();
-            } 
-            //File.WriteAllText(Config.Ins.OutPathPath+$"/{NameSpace}_Gen.cs", scripts, Encoding.UTF8);
-            Console.WriteLine("导出=>{0}", NameSpace);
+            if (EunmTypes.Count>0)
+            {
+                //enum
+                foreach (var enumType in EunmTypes)
+                {
+                    codeWriter.WriteLine($"public enum {enumType.Name}");
+                    codeWriter.StartBlock();
+                    foreach (var subItem in enumType.SunItem)
+                    {
+                        codeWriter.WriteLine(subItem+",");
+                    }
+                    codeWriter.EndBlock();
+                }
+
+            }
+            if (TypeInfo.Count>0)
+            {
+                foreach (TypeInfo type in TypeInfo)
+                {
+                    string code = $"public class {type.ClssName}";
+                    if (type.IsSubClass)
+                    {
+                        code += type.BaseClass;
+                    }
+                    else
+                    {
+                        code += type.Subclass;
+                    }
+                    codeWriter.WriteLine(code);
+                    codeWriter.StartBlock();
+                    //definition
+                    foreach (var fp in type.Field_Property_Info)
+                    {
+                        codeWriter.WriteLine($"{fp.TypeName} {fp.Name};");
+                    }
+                    //ctor
+                    codeWriter.WriteLine($"public {type.ClssName}()");
+                    codeWriter.StartBlock();
+                    foreach (var fp in type.Field_Property_Info)
+                    {
+                        codeWriter.WriteLine(fp.CtorCode);
+                    }
+                    codeWriter.EndBlock();//end ctor
+
+                    //read
+                    codeWriter.WriteLine("public override void Read(byte[] data, ref int offset)");
+                    codeWriter.StartBlock();
+                    if (type.IsSubClass)
+                    {
+                        codeWriter.WriteLine("base.Read(data,ref offset);");
+                    }
+                    foreach (var fp in type.Field_Property_Info)
+                    {
+                        //if (fp is ListType list)
+                        //{
+                        //    //CodeWriter codeWriter = new CodeWriter();
+                        //    codeWriter.StartBlock();
+                        //    codeWriter.WriteLine("int listCount = ByteBuffer.ReadInt(data,ref offset);");
+                        //    codeWriter.WriteLine("for(int i = 0;i<listCount;i++ )");
+                        //    codeWriter.StartBlock();
+                        //    codeWriter.WriteLine($"{list.GenericityType.TypeName} {list.GenericityType.ReadCode()}");
+                        //    codeWriter.WriteLine($"{list.Name}.Add({list.GenericityType.Name});");
+                        //    codeWriter.EndBlock();
+                        //    codeWriter.EndBlock();
+                        //}
+                        //else if (fp is DictionaryType)
+                        //{
+
+                        //}
+                        //else
+                        //{
+                        //    codeWriter.WriteLine(fp.ReadCode());
+                        //}
+                        codeWriter.WriteLine(fp.ReadCode(codeWriter.blockCount));
+                    }
+                    codeWriter.EndBlock();//end read
+
+                    //write
+                    codeWriter.WriteLine("public override void Write(byte[] data, ref int offset)");
+                    codeWriter.StartBlock();
+                    foreach (var fp in type.Field_Property_Info)
+                    {
+                        codeWriter.WriteLine(fp.WriteCode());
+                    }
+                    codeWriter.EndBlock();//end write
+
+                    codeWriter.EndBlock();//class
+                }
+            }
+
+            codeWriter.EndBlock();//namespace
+
+            codeWriter.Save(Config.OutPathPath+ $"/{NameSpace}_Gen.cs");
+            Console.WriteLine("导出=>{0}", Config.OutPathPath + $"/{NameSpace}_Gen.cs");
         }
     }
 }
