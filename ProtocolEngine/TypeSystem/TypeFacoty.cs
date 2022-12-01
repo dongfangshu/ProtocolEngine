@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
+using System.Numerics;
+using ProtocolEngine.TypeSystem;
 
 namespace ProtocolEngine
 {
@@ -43,6 +45,18 @@ namespace ProtocolEngine
             {
                 return new BytesType(Name);
             }
+            else if (type == typeof(float))
+            {
+                return new FloatType(Name);
+            }
+            else if (type == typeof(Vector3))
+            {
+                return new Vector3Type(Name);
+            }
+            else if (type.IsEnum)
+            {
+                return new EnumType(type, Name);
+            }
             else
             {
                 if (type.IsGenericType)
@@ -51,7 +65,7 @@ namespace ProtocolEngine
                     Type[] genericArguments = type.GetGenericArguments();
                     if (TypeName.StartsWith("list"))
                     {
-                        return new ListType(genericArguments[0],Name);
+                        return new ListType(genericArguments[0], Name);
                     }
                     else if (TypeName.StartsWith("dictionary"))
                     {
@@ -59,11 +73,9 @@ namespace ProtocolEngine
                     }
                     throw new NotSupportedException("未支持的泛型结构");
                 }
-                else if (type.IsEnum)
-                {
-                    return new EnumType(type,Name);
-                }
-                var parentType = type.BaseType;
+
+
+                //var parentType = type.BaseType;
                 return new ConstomType(type, Name);
             }
         }

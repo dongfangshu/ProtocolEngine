@@ -31,7 +31,7 @@ namespace ProtocolEngine
             TypeInfo.Add(Info);
             foreach (var nameSpace in Info.ImportNameSpace)
             {
-                UseNameSpace.Add(NameSpace);
+                UseNameSpace.Add(nameSpace);
             }
         }
         public void Wirte()
@@ -85,7 +85,7 @@ namespace ProtocolEngine
                     //definition
                     foreach (var fp in type.Field_Property_Info)
                     {
-                        codeWriter.WriteLine($"{fp.TypeName} {fp.Name};");
+                        codeWriter.WriteLine($"public {fp.TypeName} {fp.Name};");
                     }
                     //ctor
                     codeWriter.WriteLine($"public {type.ClssName}()");
