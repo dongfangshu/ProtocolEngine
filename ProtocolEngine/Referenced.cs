@@ -19,11 +19,11 @@ namespace ProtocolEngine
                 var Ref = MetadataReference.CreateFromFile(uri.LocalPath);
                 references.Add(Ref);
             }
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory+ "Protocol.dll"))//ProtocolCore
-            {
-                var Ref = MetadataReference.CreateFromFile(AppDomain.CurrentDomain.BaseDirectory + "Protocol.dll");
-                references.Add(Ref);
-            }
+            //if (File.Exists(AppDomain.CurrentDomain.BaseDirectory+ "Protocol.dll"))//ProtocolCore
+            //{
+            //    var Ref = MetadataReference.CreateFromFile(AppDomain.CurrentDomain.BaseDirectory + "Protocol.dll");
+            //    references.Add(Ref);
+            //}
             if (!string.IsNullOrEmpty(Config.ExtraReference))
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(Config.ExtraReference);

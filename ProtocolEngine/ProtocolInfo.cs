@@ -49,6 +49,7 @@ namespace ProtocolEngine
             codeWriter.WriteLine($"namespace {NameSpace}");
             codeWriter.StartBlock();
 
+            codeWriter.WriteLine("/** This is an automatically generated class by Protocol. Please do not modify it. **/");
             if (EunmTypes.Count>0)
             {
                 //enum
@@ -112,7 +113,7 @@ namespace ProtocolEngine
                     codeWriter.WriteLine("}");
                     codeWriter.WriteLine("catch (Exception ex)");
                     codeWriter.WriteLine("{");
-                    codeWriter.WriteLine("throw new Exception();");
+                    codeWriter.WriteLine("throw;");
                     codeWriter.WriteLine("}");
                     codeWriter.EndBlock();//end read
 

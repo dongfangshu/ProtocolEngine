@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProtocolCore\ProtocolCore.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Config\Template.template">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

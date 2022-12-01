@@ -29,8 +29,8 @@ namespace ProtocolEngine
             var fields = clrType.GetFields(BindingFlags.Instance | BindingFlags.Public);
             foreach (FieldInfo? field in fields)
             {
-                if (Attribute.IsDefined(field, typeof(Ignore)))
-                    continue;
+                //if (Attribute.IsDefined(field, typeof(Ignore)))
+                //    continue;
                 if (field.IsPrivate)
                     continue;
                 var DeclaringType = field.DeclaringType;
@@ -42,13 +42,18 @@ namespace ProtocolEngine
                 {
                     ImportNameSpace.Add(field.FieldType.Namespace);
                 }
+                //else
+                //{
+                //    ImportNameSpace.Add("Protocol_" + clrType.Name);
+                //}
+                //nameSpaceKey = "Protocol_"+type.Name;
                 Field_Property_Info.Add(TypeFacoty.GetType(field.FieldType, field.Name));
             }
             var Properties = clrType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
             foreach (var property in Properties)
             {
-                if (Attribute.IsDefined(property, typeof(Ignore)))
-                    continue;
+                //if (Attribute.IsDefined(property, typeof(Ignore)))
+                //    continue;
                 if (property.GetMethod == null || property.SetMethod == null || property.Name == "Item")
                     continue;
                 var DeclaringType = property.DeclaringType;

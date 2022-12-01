@@ -61,10 +61,14 @@ namespace ProtocolEngine
                     var types = assembly.GetTypes();
                     foreach (Type type in types)
                     {
-                        if (type.GetCustomAttribute<Ignore>() != null)
-                            continue;
-                        string nameSpaceKey = string.Empty;
-                        if (!string.IsNullOrEmpty(type.Namespace))
+                        //if (type.GetCustomAttribute<Ignore>() != null)
+                        //    continue;
+                        string nameSpaceKey;
+                        if (string.IsNullOrEmpty(type.Namespace))
+                        {
+                            throw new Exception("命名空间不允许为空");
+                        }
+                        else
                         {
                             nameSpaceKey = type.Namespace;
                         }

@@ -8,11 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProtocolCore\ProtocolCore.csproj" />
+    <Compile Remove="Protocol\**" />
+    <EmbeddedResource Remove="Protocol\**" />
+    <None Remove="Protocol\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Generate\" />
+    <ProjectReference Include="..\ProtocolCore\ProtocolCore.csproj" />
   </ItemGroup>
 
 </Project>
