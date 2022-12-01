@@ -12,11 +12,14 @@ namespace ProtocolEngine
         public static IEnumerable<MetadataReference> GetReference()
         {
             List< MetadataReference > references = new List< MetadataReference >();
-            string[] runtime = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetName().CodeBase).ToArray();
+            var runtime = AppDomain.CurrentDomain.GetAssemblies().ToDictionary(assembly=>assembly.GetName().Name,assembly => assembly.Location);
             foreach (var file in runtime)//runtime
             {
-                Uri uri = new Uri(file);
-                var Ref = MetadataReference.CreateFromFile(uri.LocalPath);
+                if (file.Value=="")
+                {
+                    continue;
+                }
+                var Ref = MetadataReference.CreateFromFile(file.Value);
                 references.Add(Ref);
             }
             //if (File.Exists(AppDomain.CurrentDomain.BaseDirectory+ "Protocol.dll"))//ProtocolCore

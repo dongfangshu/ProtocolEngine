@@ -94,6 +94,7 @@ namespace ProtocolEngine
                     Console.WriteLine("CSharp Emit Error");
                     foreach (var dig in result.Diagnostics)
                     {
+                        LogWriter.Write(dig.GetMessage());
                         Console.WriteLine(dig.GetMessage());
                     }
                 }

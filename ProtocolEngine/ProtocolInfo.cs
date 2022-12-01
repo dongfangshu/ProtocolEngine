@@ -17,7 +17,9 @@ namespace ProtocolEngine
             UseNameSpace.Add("System.Linq");
             UseNameSpace.Add("System.Text");
             UseNameSpace.Add("System.Threading.Tasks");
-            UseNameSpace.Add("ProtocolEngine");
+            UseNameSpace.Add("UnityEngine");
+            UseNameSpace.Add("CoreLib");
+            //UseNameSpace.Add("ProtocolEngine");
         }
         public void AddType(Type type)
         {
@@ -113,6 +115,7 @@ namespace ProtocolEngine
                     codeWriter.WriteLine("}");
                     codeWriter.WriteLine("catch (Exception ex)");
                     codeWriter.WriteLine("{");
+                    codeWriter.WriteLine("\tUnityEngine.Debug.LogError(ex.Message);");
                     codeWriter.WriteLine("throw;");
                     codeWriter.WriteLine("}");
                     codeWriter.EndBlock();//end read
