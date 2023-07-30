@@ -1,12 +1,25 @@
 ﻿//using Hero;
 //using Test;
 
+using System.Text;
+
 namespace ProtocolTest
 {
     internal class Program
     {
         static void Main(string[] args)
         {
+
+            string str = "序列号";
+            var bytes = System.Text.Encoding.UTF8.GetBytes(str);
+            var sl = bytes.Select(x => x.ToString());
+            StringBuilder sb = new StringBuilder();
+            
+            foreach (var item in sl)
+            {
+                sb.Append(item);
+            }
+            Console.WriteLine(sb.ToString());
             //MyProtocol myProtocol = new MyProtocol();
             //myProtocol.ID = 10;
             //int offset = 0;

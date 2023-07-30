@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +15,29 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProtocolCore\ProtocolCore.csproj" />
+    <Compile Remove="Generate\Data1_Gen.cs" />
+    <Compile Remove="Generate\Data2_Gen.cs" />
+    <Compile Remove="Generate\Data3_Gen.cs" />
+    <Compile Remove="Generate\Data4_Gen.cs" />
+    <Compile Remove="Generate\Data5_Gen.cs" />
+    <Compile Remove="Generate\Data6_Gen.cs" />
+    <Compile Remove="Generate\Data7_Gen.cs" />
+    <Compile Remove="Generate\Data8_Gen.cs" />
+    <Compile Remove="Generate\Data9_Gen.cs" />
+    <Compile Remove="Generate\DataType1_Gen.cs" />
+    <Compile Remove="Generate\MyNamespace_Gen.cs" />
+    <Compile Remove="Generate\Protocol_Data1_Gen.cs" />
+    <Compile Remove="Generate\Protocol_Data2_Gen.cs" />
+    <Compile Remove="Generate\Protocol_Data3_Gen.cs" />
+    <Compile Remove="Generate\Protocol_Data4_Gen.cs" />
+    <Compile Remove="Generate\Protocol_Data5_Gen.cs" />
+    <Compile Remove="Generate\Protocol_Data6_Gen.cs" />
+    <Compile Remove="Generate\Protocol_Data7_Gen.cs" />
+    <Compile Remove="Generate\Protocol_Data8_Gen.cs" />
+    <Compile Remove="Generate\Protocol_Data9_Gen.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
   </ItemGroup>
 
 </Project>

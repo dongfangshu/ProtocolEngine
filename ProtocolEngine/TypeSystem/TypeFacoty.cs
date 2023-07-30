@@ -53,9 +53,25 @@ namespace ProtocolEngine
             {
                 return new Vector3Type(Name);
             }
+            else if (type == typeof(char))
+            {
+                return new CharType(Name);
+            }
+            else if (type == typeof(DateTime))
+            {
+                return new DateTimeType(Name);
+            }
+            else if (type == typeof(TimeSpan))
+            {
+                return new TimeSpanType(Name);
+            }
             else if (type.IsEnum)
             {
                 return new EnumType(type, Name);
+            }
+            else if (type.IsArray)
+            {
+                return new ArrayType(type, Name);
             }
             else
             {
@@ -71,6 +87,19 @@ namespace ProtocolEngine
                     {
                         return new DictionaryType(type, Name);
                     }
+                    else if (TypeName.StartsWith("stack"))
+                    {
+                        return new StackType(type, Name);
+                    }
+                    else if (TypeName.StartsWith("queue"))
+                    {
+                        return new QueueType(type, Name);
+                    }
+                    else if (TypeName.StartsWith("linkedlist"))
+                    {
+                        return new LinkedListType(type, Name);
+                    }
+
                     throw new NotSupportedException("未支持的泛型结构");
                 }
 

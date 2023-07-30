@@ -95,6 +95,7 @@ namespace ProtocolEngine
                     codeWriter.StartBlock();
                     foreach (var fp in type.Field_Property_Info)
                     {
+                        //codeWriter.Write("//");
                         codeWriter.WriteLine(fp.CtorCode);
                     }
                     codeWriter.EndBlock();//end ctor
@@ -102,8 +103,8 @@ namespace ProtocolEngine
                     //read
                     codeWriter.WriteLine("public override void Read(byte[] data, ref int offset)");
                     codeWriter.StartBlock();
-                    codeWriter.WriteLine("try");
-                    codeWriter.WriteLine("{");
+                    //codeWriter.WriteLine("try");
+                    //codeWriter.WriteLine("{");
                     if (type.IsSubClass)
                     {
                         codeWriter.WriteLine("base.Read(data,ref offset);");
@@ -112,12 +113,12 @@ namespace ProtocolEngine
                     {
                         codeWriter.WriteLine(fp.ReadCode(codeWriter.blockCount));
                     }
-                    codeWriter.WriteLine("}");
-                    codeWriter.WriteLine("catch (Exception ex)");
-                    codeWriter.WriteLine("{");
-                    codeWriter.WriteLine("\tUnityEngine.Debug.LogError(ex.Message);");
-                    codeWriter.WriteLine("throw;");
-                    codeWriter.WriteLine("}");
+                    //codeWriter.WriteLine("}");
+                    //codeWriter.WriteLine("catch (Exception ex)");
+                    //codeWriter.WriteLine("{");
+                    //codeWriter.WriteLine("\tUnityEngine.Debug.LogError(ex.Message);");
+                    //codeWriter.WriteLine("throw;");
+                    //codeWriter.WriteLine("}");
                     codeWriter.EndBlock();//end read
 
                     //write
